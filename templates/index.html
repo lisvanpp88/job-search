@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Listings</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4">Job Listings</h1>
+
+        <!-- Formulario de Búsqueda -->
+        <form method="GET" action="{{ url_for('index') }}" class="mb-4">
+            <div class="form-row">
+                <div class="col">
+                    <input type="text" name="keywords" class="form-control" placeholder="Job Name" value="{{ keywords or '' }}" />
+                </div>
+                <div class="col">
+                    <input type="text" name="location" class="form-control" placeholder="Location" value="{{ location or '' }}" />
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </form>
+
+        {% if jobs %}
+            <ul class="list-group">
+                {% for job in jobs %}
+                    <li class="list-group-item">
+                        <h5>{{ job.name }}</h5>
+                        <p>Location: {{ job.locations[0].name if job.locations else 'N/A' }}</p>
+                        <p>Company: {{ job.company.name }}</p>
+                        <p>Level: {{ job.levels[0].name if job.levels else 'N/A' }}</p>
+
+                        <!--<p><strong>Company:</strong> {{ job.company.name }}</p>
+                        <p><strong>Location:</strong> {{ job.locations[0].name if job.locations else 'N/A' }}</p>-->
+                        <a href="{{ job.refs.landing_page }}" class="btn btn-info">View Job</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No jobs found.</p>
+        {% endif %}
+
+        
+        <!-- Paginación -->
+        <div class="mt-4">
+            {% if page > 1 %}
+                <a href="{{ url_for('page', page_number=page-1) }}" class="btn btn-secondary">Previous</a>
+            {% endif %}
+            <a href="{{ url_for('page', page_number=page+1) }}" class="btn btn-secondary">Next</a>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
